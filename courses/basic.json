@@ -1,0 +1,49 @@
+
+{
+	"course": "Basic Web Lessons",
+	"description": "A small set of beginner-friendly lessons with mini-assignments (HTML/CSS/JS).",
+	"lessons": [
+		{
+			"id": "lesson-1",
+			"title": "Hello HTML",
+			"taskDescription": "Create a simple HTML page with a heading and a paragraph. The paragraph should contain a placeholder name.",
+			"assignments": [
+				{
+					"id": "1-1",
+					"title": "Simple page",
+					"html": "<h1>Welcome to the lesson</h1>\n  <p id=\"intro\">Hello, my name is <strong>Student Name</strong>.</p>\n",
+					"css": "body { font-family: Arial, sans-serif; margin: 24px; }\nh1 { color: #2b7; }\n#intro { color: #333; }",
+					"javascript": "document.addEventListener('DOMContentLoaded', function(){ alert('Lesson 1 loaded'); });"
+				}
+			]
+		},
+		{
+			"id": "lesson-2",
+			"title": "Styling with CSS",
+			"taskDescription": "Style a small card component: add a box shadow, padding and a hover effect.",
+			"assignments": [
+				{
+					"id": "2-1",
+					"title": "Card styling",
+					"html": "<div class=\"card\">\n  <h2>Card title</h2>\n  <p>This is a small card. Hover to see the effect.</p>\n</div>",
+					"css": ".card { max-width: 320px; padding: 16px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); background: #fff; transition: transform .15s ease, box-shadow .15s ease; }\n.card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }",
+					"javascript": "// No JS required for this assignment\nconsole.log('Card assignment ready');"
+				}
+			]
+		},
+		{
+			"id": "lesson-3",
+			"title": "Interactive JavaScript",
+			"taskDescription": "Create a button that increments a counter displayed on the page.",
+			"assignments": [
+				{
+					"id": "3-1",
+					"title": "Counter button",
+					"html": "<div id=\"counterApp\">\n  <p>Count: <span id=\"count\">0</span></p>\n  <button id=\"incBtn\">Increment</button>\n</div>",
+					"css": "#counterApp { font-family: Tahoma, sans-serif; margin: 12px; }\n#incBtn { padding: 8px 12px; border-radius: 4px; border: 1px solid #888; background: #f5f5f5; cursor: pointer; }",
+					"javascript": "(function(){ var countEl = document.getElementById('count'); var btn = document.getElementById('incBtn'); var count = 0; btn && btn.addEventListener('click', function(){ count++; if(countEl) countEl.textContent = count; }); })();"
+				}
+			]
+		}
+	]
+}

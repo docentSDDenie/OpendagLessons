@@ -1,42 +1,94 @@
+<?php
+    session_start();
+    
+    include 'course.php';
+    include 'utils.php';
+
+    //Set a default user session
+    if(!isset($_SESSION['user_id'])) {
+        $_SESSION['user_id'] = 'guest';
+        $_SESSION['role'] = 'guest';
+        //Set a CSRF token - so we can validate requests with hash_equals
+        $_SESSION['token'] = bin2hex(random_bytes(32));
+    }
+    
+    
+    if(
+        $_SERVER['REQUEST_METHOD'] == "GET" && 
+        isset($_REQUEST['action']) &&
+        $_REQUEST['action'] == 'fetch_course' &&
+        isset($_REQUEST['csrf_token']) &&
+        validateToken($_REQUEST['csrf_token']) &&
+        isset($_REQUEST['course_name']) &&
+        $_REQUEST['course_name'] == true
+    ) {
+
+        //Clear the output buffer to avoid corrupting the JSON output
+        ob_clean();
+
+        $name = filter_var($_REQUEST['course_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS,);
+        
+        //Fetch a specific course
+        $courses = Courses::fetchCourse($name, $_SESSION['role']);
+
+        header('Content-Type: application/json');
+        echo $courses;
+        exit;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Code Editor - Summa</title>
+    <link rel="icon" type="image/x-icon" href="public/images/favicon.ico">
     <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="public/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="public/fontawesome/css/regular.css">
+    <link rel="stylesheet" href="public/fontawesome/css/solid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js" integrity="sha512-BHJlu9vUXVrcxhRwbBdNv3uTsbscp8pp3LJ5z/sw9nBJUegkNlkcZnvODRgynJWhXMCsVUGZlFuzTrr5I2X3sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js" integrity="sha512-6mX9l+Xg8pU7r7fX2b0r7c3j3Zk5Yv5kz==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="public/js/session.js" type="text/javascript"></script>
+    <script src="public/js/utils.js" type="text/javascript"></script>
 </head>
+
 <body>
+    <input type="hidden" id="csrf_token" name="csrf_token" value="<?php echo $_SESSION['token']; ?>" />
     <header>
         <div class="container row">
             <div class="brand">
                 <div class="logo"></div>
-                <div class="title">Online Code Editor - Summa</div>
+                <div class="title">Learn to code!</div>
             </div>
 
             <div class="row">
                 <button class="btn secondary" id="saveBtn" title="Save work locally"><span>Save</span></button>
                 <button class="btn secondary" id="loadBtn" title="Load work file"><span>Load</span></button>
-                <input type="file" id="openFile" accept="application/json" hidden/>
+                <input type="file" id="openFile" accept="application/json" hidden />
             </div>
         </div>
     </header>
-    
+
     <main>
-        <aside class="card panel stack">
-            <h2>Task / Assignment</h2>
-
-            <textarea id="assignment" class="text" placeholder="Write the task description here..."></textarea>
-
-            <div class="stack">
-                <label for="testArea">Validation tests (Javascript only - optional)</label>
-                <textarea id="testArea" class="text" placeholder="Write simple tests to append afer the students code to check solution"></textarea>
-            </div>
-
-            <div class="muted">
-                Tip: <span class="kbd">Ctrl</span> + <span class="kbd">S</span> to save,
-                <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> to run.
+        <aside id="filemanager" class="card panel stack">
+            <h2 id="course_title">{{title}}</h2>
+            <hr>
+            <div id="course_files">
+                <template id="course_file_template">
+                    <div class="label">
+                        <i class="fa-solid fa-file"></i>
+                        <span onclick="loadCourseFile(this)" data-filepath="{{path}}" class="link">{{name}}</span>
+                    </div>
+                </template>
+                <template id="course_folder_template">
+                    <div class="label">
+                        <i class="fa-solid fa-folder"></i>
+                        <span class="folder_title">{{folder}}</span>
+                    </div>
+                </template>
             </div>
         </aside>
 
@@ -72,10 +124,10 @@
             </div>
         </section>
         <aside class="stack panel card">
-            <h2>Output</h2>
+            <h2>Console</h2>
             <div class="out" id="output" aria-live="polite"></div>
             <div class="row">
-                <button class="btn warn" id="runTests">Run with tests</button>
+                <button class="btn warn" id="runTests" hidden>Run with tests</button>
                 <button id="clearOut" class="btn secondary">Clear log</button>
             </div>
             <h3>Notes</h3>
@@ -83,11 +135,16 @@
                 <li class="label">Everything runs inside the browserin a sanbox.</li>
                 <li class="label">You can save the work as a JSON file and restore it...</li>
             </ul>
+            <div class="muted">
+                Tip: <span class="kbd">Ctrl</span> + <span class="kbd">S</span> to save,
+                <span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> to run.
+            </div>
         </aside>
     </main>
     <footer>
         &copy 2025 Summa College - All rights reserved.
     </footer>
-    <script src="public/js/script.js" type="text/javascript"></script>
+    <script src="public/js/editor.js" type="text/javascript"></script>
 </body>
+
 </html>
