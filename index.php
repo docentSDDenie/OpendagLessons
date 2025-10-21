@@ -1,40 +1,40 @@
 <?php
-    session_start();
-    
-    include 'course.php';
-    include 'utils.php';
+session_start();
 
-    //Set a default user session
-    if(!isset($_SESSION['user_id'])) {
-        $_SESSION['user_id'] = 'guest';
-        $_SESSION['role'] = 'guest';
-        //Set a CSRF token - so we can validate requests with hash_equals
-        $_SESSION['token'] = bin2hex(random_bytes(32));
-    }
-    
-    
-    if(
-        $_SERVER['REQUEST_METHOD'] == "GET" && 
-        isset($_REQUEST['action']) &&
-        $_REQUEST['action'] == 'fetch_course' &&
-        isset($_REQUEST['csrf_token']) &&
-        validateToken($_REQUEST['csrf_token']) &&
-        isset($_REQUEST['course_name']) &&
-        $_REQUEST['course_name'] == true
-    ) {
+include 'course.php';
+include 'utils.php';
 
-        //Clear the output buffer to avoid corrupting the JSON output
-        ob_clean();
+//Set a default user session
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['user_id'] = 'guest';
+    $_SESSION['role'] = 'guest';
+    //Set a CSRF token - so we can validate requests with hash_equals
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
 
-        $name = filter_var($_REQUEST['course_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS,);
-        
-        //Fetch a specific course
-        $courses = Courses::fetchCourse($name, $_SESSION['role']);
 
-        header('Content-Type: application/json');
-        echo $courses;
-        exit;
-    }
+if (
+    $_SERVER['REQUEST_METHOD'] == "GET" &&
+    isset($_REQUEST['action']) &&
+    $_REQUEST['action'] == 'fetch_course' &&
+    isset($_REQUEST['csrf_token']) &&
+    validateToken($_REQUEST['csrf_token']) &&
+    isset($_REQUEST['course_name']) &&
+    $_REQUEST['course_name'] == true
+) {
+
+    //Clear the output buffer to avoid corrupting the JSON output
+    ob_clean();
+
+    $name = filter_var($_REQUEST['course_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS,);
+
+    //Fetch a specific course
+    $courses = Courses::fetchCourse($name, $_SESSION['role']);
+
+    header('Content-Type: application/json');
+    echo $courses;
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="public/fontawesome/css/regular.css">
     <link rel="stylesheet" href="public/fontawesome/css/solid.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.3/ace.min.js" integrity="sha512-BHJlu9vUXVrcxhRwbBdNv3uTsbscp8pp3LJ5z/sw9nBJUegkNlkcZnvODRgynJWhXMCsVUGZlFuzTrr5I2X3sQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js" integrity="sha512-6mX9l+Xg8pU7r7fX2b0r7c3j3Zk5Yv5kz==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="public/js/session.js" type="text/javascript"></script>
     <script src="public/js/utils.js" type="text/javascript"></script>
 </head>
@@ -68,27 +68,49 @@
                 <button class="btn secondary" id="saveBtn" title="Save work locally"><span>Save</span></button>
                 <button class="btn secondary" id="loadBtn" title="Load work file"><span>Load</span></button>
                 <input type="file" id="openFile" accept="application/json" hidden />
+
+                <!-- Course selection -->
+                <select id="courseSelect" class="btn secondary" onchange="loadCourse(this.value)">
+                    <option value="" disabled selected>Load course...</option>
+                </select>
+
+                <!-- Course panel toggle -->
+                <button id="toggleCoursePanel" class="btn secondary" title="Toggle courses" aria-pressed="false">Courses</button>
+            </div>
+        </div>
+        <div id="course_container" class="row">
+            <div class="course_panel">
+                <div class="course_header">
+                    <h1 id="course_title">Course Name</h1>
+                    <p id="course_description"></p>
+                </div>
+                <div id="lessons_bar" class="stack panel">
+                    <div id="lessons_list" class="stack">
+                        <!-- Lessons will be loaded here -->
+
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <main>
-        <aside id="filemanager" class="card panel stack">
-            <h2 id="course_title">{{title}}</h2>
-            <hr>
-            <div id="course_files">
-                <template id="course_file_template">
-                    <div class="label">
-                        <i class="fa-solid fa-file"></i>
-                        <span onclick="loadCourseFile(this)" data-filepath="{{path}}" class="link">{{name}}</span>
-                    </div>
-                </template>
-                <template id="course_folder_template">
-                    <div class="label">
-                        <i class="fa-solid fa-folder"></i>
-                        <span class="folder_title">{{folder}}</span>
-                    </div>
-                </template>
+        <aside id="course_files" class="card panel stack">
+            <!-- Image upload -->
+            <div class="file_image_upload">
+                <button id="addImage" class="btn secondary" title="Insert image">Add image</button>
+                <input id="imageUpload" type="file" accept="image/*" hidden>
+            </div>
+            <div id="coursefiles">
+                <div class="files" id="fileList" role="tablist" aria-label="web editors">
+                    <span class="file active" role="tab" aria-selected="true" tabindex="0" data-pane="html">index.html</span>
+                    <span class="file" role="tab" aria-selected="false" tabindex="-1" data-pane="css">style.css</span>
+                    <span class="file" role="tab" aria-selected="false" tabindex="-1" data-pane="js">script.js</span>
+                </div>
+                <div id="imageList" role="tablist" aria-label="course images">
+                    <span class="folder closed">afbeeldingen</span>
+                    <!-- Uploaded images will appear here -->   
+                </div>
             </div>
         </aside>
 
@@ -102,12 +124,6 @@
                     </div>
                 </div>
 
-                <div class="tabs" id="webTabs" role="tablist" aria-label="web editors">
-                    <button class="tab active" role="tab" aria-selected="true" tabindex="0" data-pane="html">HTML</button>
-                    <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-pane="css">CSS</button>
-                    <button class="tab" role="tab" aria-selected="false" tabindex="-1" data-pane="js">Javascript</button>
-                </div>
-
                 <div class="editor-wrap" data-pane="html">
                     <div id="ed_html" class="editor"></div>
                 </div>
@@ -117,6 +133,10 @@
                 <div class="editor-wrap" data-pane="js" hidden>
                     <div id="ed_js" class="editor"></div>
                 </div>
+                <div class="editor-wrap" data-pane="img" hidden>
+                    <div id="ed_img" class="editor">Hier komt een plaatje</div>
+                </div>
+                
                 <div class="stack">
                     <h3>Preview</h3>
                     <iframe id="preview" class="preview" sandbox="allow-scripts allow-same-origin allow-modals allow-forms" title="preview"></iframe>
@@ -145,6 +165,7 @@
         &copy 2025 Summa College - All rights reserved.
     </footer>
     <script src="public/js/editor.js" type="text/javascript"></script>
+    <script src="public/js/fileops.js" type="text/javascript"></script>
 </body>
 
 </html>

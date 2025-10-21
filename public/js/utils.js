@@ -2,8 +2,6 @@
 async function fetchCourse(courseName) {
     const token = document.getElementById('csrf_token').value;
     const url = 'index.php?action=fetch_course&course_name=' + encodeURIComponent(courseName) + '&csrf_token=' + encodeURIComponent(token);
-    console.log("Fetching course:", courseName, "with token:", token, "url:", url);
-
     const response = await fetch(url, { credentials: 'same-origin' });
     if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
@@ -18,13 +16,38 @@ async function fetchCourse(courseName) {
     }
 }
 
-function loadCourse(courseData) {
-    if (!courseData || !courseData.lessons || courseData.lessons.length === 0) {
-        console.error("Invalid course data:", courseData);
-        return;
+function getCoursesFromList(courses) {
+    try {
+        const list = window.courses.map(course => ({
+            course: course.course,
+            description: course.description
+        }));
+
+        return list;
     }
-    else {
-        console.log("Course data:", courseData);
+    catch (err) {
+        console.error("Error processing courses:", err);
+        return [];
+    }
+}
+
+function loadCourse(courseId) {
+
+    try {
+        const course = window.courses.find(c => c.course === courseId);
+        
+        if (!course) {
+            throw new Error('Course not found: ' + courseId);
+        }
+
+        const slug = courseId + '/0';
+        updateCurrentCourseInSessionStorage(slug);
+        
+        //Function in editor.js
+        buildCourse(course);
+
+    } catch (err) {
+        console.error("Error loading course:", err);
     }
 }
 
@@ -33,9 +56,16 @@ window.onload = function() {
     const courseId = session?.currentCourse || 'basic';
     
     fetchCourse(courseId).then(courseData => {
-        console.log("Fetched course data:", courseData);
-        loadCourse(courseData);
-        console.log("Course loaded:", courseData);
+        window.courses = courseData;
+        const courses = getCoursesFromList(courseData);
+        console.log("Processed courses list:", courses);
+        
+        courses.forEach(course => {
+            const option = document.createElement('option');
+            option.value = course.course;
+            option.textContent = course.course;
+            document.getElementById('courseSelect').appendChild(option);
+        });
     }).catch(error => {
         //See raw error in console
         console.error('Error fetching course:', error);

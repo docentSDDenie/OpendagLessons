@@ -1,49 +1,242 @@
-
-{
-	"course": "Basic Web Lessons",
-	"description": "A small set of beginner-friendly lessons with mini-assignments (HTML/CSS/JS).",
-	"lessons": [
-		{
-			"id": "lesson-1",
-			"title": "Hello HTML",
-			"taskDescription": "Create a simple HTML page with a heading and a paragraph. The paragraph should contain a placeholder name.",
-			"assignments": [
-				{
-					"id": "1-1",
-					"title": "Simple page",
-					"html": "<h1>Welcome to the lesson</h1>\n  <p id=\"intro\">Hello, my name is <strong>Student Name</strong>.</p>\n",
-					"css": "body { font-family: Arial, sans-serif; margin: 24px; }\nh1 { color: #2b7; }\n#intro { color: #333; }",
-					"javascript": "document.addEventListener('DOMContentLoaded', function(){ alert('Lesson 1 loaded'); });"
+[
+	{
+		"course": "Reference course",
+		"description": "This is a reference for you",
+		"lessons": [
+			{
+				"id": "lesson-1",
+				"title": "Hello HTML",
+				"taskDescription": "Create a simple HTML page with a heading and a paragraph. The paragraph should contain a placeholder name.",
+				"html": "<h1>Welcome to the lesson</h1>\n<p id=\"intro\">Hello, my name is <strong>Student Name</strong>.</p>\n",
+				"css": "body { font-family: Arial, sans-serif; margin: 24px; }\nh1 { color: #2b7; }\n#intro { color: #333; }",
+				"javascript": "document.addEventListener('DOMContentLoaded', function(){ alert('Lesson 1 loaded'); });",
+				"images": {
+					"butler.jpg": "public/uploaded/butler.jpg"
 				}
-			]
-		},
-		{
-			"id": "lesson-2",
-			"title": "Styling with CSS",
-			"taskDescription": "Style a small card component: add a box shadow, padding and a hover effect.",
-			"assignments": [
-				{
-					"id": "2-1",
-					"title": "Card styling",
-					"html": "<div class=\"card\">\n  <h2>Card title</h2>\n  <p>This is a small card. Hover to see the effect.</p>\n</div>",
-					"css": ".card { max-width: 320px; padding: 16px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); background: #fff; transition: transform .15s ease, box-shadow .15s ease; }\n.card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }",
-					"javascript": "// No JS required for this assignment\nconsole.log('Card assignment ready');"
+			},
+			{
+				"id": "lesson-2",
+				"title": "Styling with CSS",
+				"taskDescription": "Style a small card component: add a box shadow, padding and a hover effect.",
+				"html": "<div class=\"card\">\n  <h2>Card title</h2>\n  <p>This is a small card. Hover to see the effect.</p>\n</div>",
+				"css": ".card { max-width: 320px; padding: 16px; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.08); background: #fff; transition: transform .15s ease, box-shadow .15s ease; }\n.card:hover { transform: translateY(-4px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }",
+				"javascript": "// No JS required for this assignment\nconsole.log('Card assignment ready');",
+				"images": {
+					"compass.jpg": "public/uploaded/compass_symbol.png"
 				}
-			]
-		},
-		{
-			"id": "lesson-3",
-			"title": "Interactive JavaScript",
-			"taskDescription": "Create a button that increments a counter displayed on the page.",
-			"assignments": [
-				{
-					"id": "3-1",
-					"title": "Counter button",
-					"html": "<div id=\"counterApp\">\n  <p>Count: <span id=\"count\">0</span></p>\n  <button id=\"incBtn\">Increment</button>\n</div>",
-					"css": "#counterApp { font-family: Tahoma, sans-serif; margin: 12px; }\n#incBtn { padding: 8px 12px; border-radius: 4px; border: 1px solid #888; background: #f5f5f5; cursor: pointer; }",
-					"javascript": "(function(){ var countEl = document.getElementById('count'); var btn = document.getElementById('incBtn'); var count = 0; btn && btn.addEventListener('click', function(){ count++; if(countEl) countEl.textContent = count; }); })();"
-				}
-			]
-		}
-	]
-}
+			},
+			{
+				"id": "lesson-3",
+				"title": "Interactive JavaScript",
+				"taskDescription": "Create a button that increments a counter displayed on the page.",
+				"html": "<div id=\"counterApp\">\n  <p>Count: <span id=\"count\">0</span></p>\n  <button id=\"incBtn\">Increment</button>\n</div>",
+				"css": "#counterApp { font-family: Tahoma, sans-serif; margin: 12px; }\n#incBtn { padding: 8px 12px; border-radius: 4px; border: 1px solid #888; background: #f5f5f5; cursor: pointer; }",
+				"javascript": "(function(){ var countEl = document.getElementById('count'); var btn = document.getElementById('incBtn'); var count = 0; btn && btn.addEventListener('click', function(){ count++; if(countEl) countEl.textContent = count; }); })();"
+			}
+		]
+	},
+	{
+		"course": "HTML fundamentals",
+		"description": "Learn the basics of html, such as list, images and tables.",
+		"lessons": [
+			{
+				"id": "html-1",
+				"title": "Headings & Paragraphs",
+				"taskDescription": "Create a page with heading levels (h1-h3) and at least two paragraphs.",
+				"html": "<h1>Main heading</h1>\n<h2>Subheading</h2>\n<p>This is the first paragraph.</p>\n<p>This is the second paragraph.</p>"
+			},
+			{
+				"id": "html-2",
+				"title": "Lists",
+				"taskDescription": "Create an ordered and an unordered list describing your favorite topics.",
+				"html": "<h2>Things I like</h2>\n<ul>\n  <li>Reading</li>\n  <li>Coding</li>\n  <li>Music</li>\n</ul>\n<h2>Steps</h2>\n<ol>\n  <li>Step one</li>\n  <li>Step two</li>\n</ol>"
+			},
+			{
+				"id": "html-3",
+				"title": "Images and Figures",
+				"taskDescription": "Add an image with a caption using a figure/figcaption element.",
+				"html": "<figure>\n  <img src=\"public/uploaded/butler.jpg\" alt=\"Butler\" style=\"max-width:100%;height:auto;\">\n  <figcaption>Example image caption</figcaption>\n</figure>"
+			}
+		]
+	},
+	{
+		"course": "Css identifiers",
+		"description": "In these lessons you will learn to use id's, classes and tags for selecting and styling elements.",
+		"lessons": [
+			{
+				"id": "cssid-1",
+				"title": "ID selectors",
+				"taskDescription": "Style elements using the #id selector.",
+				"html": "<div id=\"banner\">Banner text</div>",
+				"css": "#banner { background:#222; color:#fff; padding:12px; border-radius:6px; }",
+				"javascript": ""
+			},
+			{
+				"id": "cssid-2",
+				"title": "Class selectors",
+				"taskDescription": "Use .class selectors to apply common styles.",
+				"html": "<div class=\"note\">Important note</div>",
+				"css": ".note { background:#111; color:#9fc; padding:8px; border-radius:4px; }",
+				"javascript": ""
+			},
+			{
+				"id": "cssid-3",
+				"title": "Tag selectors",
+				"taskDescription": "Style all paragraphs using the p selector.",
+				"html": "<p>This paragraph should be styled by a tag selector.</p>",
+				"css": "p { line-height:1.6; color:#ddd }",
+				"javascript": ""
+			}
+		]
+	},
+	{
+		"course": "Css styling",
+		"description": "In these lessons you will learn to add all kinds of styling to spice up your html.",
+		"lessons": [
+			{
+				"id": "css-1",
+				"title": "Box Model",
+				"taskDescription": "Demonstrate margin, padding and border on a box element.",
+				"html": "<div class=\"box\">Content inside box</div>",
+				"css": ".box { padding: 16px; margin: 12px; border: 2px solid #444; border-radius:8px; }",
+				"javascript": ""
+			},
+			{
+				"id": "css-2",
+				"title": "Flexbox Basics",
+				"taskDescription": "Create a horizontal layout using flexbox.",
+				"html": "<div class=\"row\">\n  <div class=\"col\">A</div>\n  <div class=\"col\">B</div>\n  <div class=\"col\">C</div>\n</div>",
+				"css": ".row { display:flex; gap:8px } .col { flex:1; background:#111; padding:8px; border-radius:6px }",
+				"javascript": ""
+			},
+			{
+				"id": "css-3",
+				"title": "Transitions",
+				"taskDescription": "Add a hover transition to a button.",
+				"html": "<button class=\"fancy\">Hover me</button>",
+				"css": ".fancy { padding:8px 12px; background:#2b7; border-radius:6px; transition: transform .12s ease } .fancy:hover { transform: translateY(-3px) }",
+				"javascript": ""
+			}
+		]
+	},
+	{
+		"course": "Javascript basics",
+		"description": "In these lessons you will learn all about variables, constants, alert and the console",
+		"lessons": [
+			{
+				"id": "js-1",
+				"title": "Variables and Types",
+				"taskDescription": "Declare variables and log their types to the console.",
+				"html": "<p>Open the console to see results.</p>",
+				"css": "",
+				"javascript": "const x = 42; console.log(typeof x, x);"
+			},
+			{
+				"id": "js-2",
+				"title": "Alerts and prompts",
+				"taskDescription": "Use alert() and prompt() to interact with the user.",
+				"html": "<button id=\"sayHi\">Say hi</button>",
+				"css": "",
+				"javascript": "document.getElementById('sayHi')?.addEventListener('click', ()=>{ const name = prompt('Your name?'); alert('Hi ' + name); });"
+			},
+			{
+				"id": "js-3",
+				"title": "Console debugging",
+				"taskDescription": "Use console.log and console.table for debugging.",
+				"html": "<p>Open developer tools to see console output.</p>",
+				"css": "",
+				"javascript": "console.table([{a:1,b:2},{a:3,b:4}])"
+			}
+		]
+	},
+	{
+		"course": "Javascript events and eventhandlers",
+		"description": "In these lessons you will learn all about variables, constants, alert and the console",
+		"lessons": [
+			{
+				"id": "evt-1",
+				"title": "Click handlers",
+				"taskDescription": "Attach a click handler to a button and update text on the page.",
+				"html": "<button id=\"btn\">Click me</button>\n<p id=\"out\">Not clicked</p>",
+				"css": "",
+				"javascript": "document.getElementById('btn')?.addEventListener('click', ()=>{ document.getElementById('out').textContent = 'Clicked'; });"
+			},
+			{
+				"id": "evt-2",
+				"title": "Input events",
+				"taskDescription": "Listen for input on a text field and display the length.",
+				"html": "<input id=\"txt\" placeholder=\"Type\" />\n<p>Length: <span id=\"len\">0</span></p>",
+				"css": "",
+				"javascript": "document.getElementById('txt')?.addEventListener('input', (e)=>{ document.getElementById('len').textContent = e.target.value.length; });"
+			},
+			{
+				"id": "evt-3",
+				"title": "Mouse events",
+				"taskDescription": "Change element style on mouseenter/mouseleave.",
+				"html": "<div id=\"box\" style=\"width:120px;height:80px;background:#222\">Hover me</div>",
+				"css": "",
+				"javascript": "const b = document.getElementById('box'); b?.addEventListener('mouseenter', ()=>b.style.background='#2b7'); b?.addEventListener('mouseleave', ()=>b.style.background='#222');"
+			}
+		]
+	},
+	{
+		"course": "Javascript conditionals",
+		"description": "In these lessons you will learn all about conditional statement, such as if-else an switch.",
+		"lessons": [
+			{
+				"id": "cond-1",
+				"title": "If/Else",
+				"taskDescription": "Write code that checks a number and logs whether it is positive, negative or zero.",
+				"html": "<p>Open console for results.</p>",
+				"css": "",
+				"javascript": "const n = 5; if(n>0) console.log('positive'); else if(n<0) console.log('negative'); else console.log('zero');"
+			},
+			{
+				"id": "cond-2",
+				"title": "Switch statement",
+				"taskDescription": "Use a switch to map a value to a string.",
+				"html": "<p>Open console for examples.</p>",
+				"css": "",
+				"javascript": "const v = 2; switch(v){ case 1: console.log('one'); break; case 2: console.log('two'); break; default: console.log('other'); }"
+			},
+			{
+				"id": "cond-3",
+				"title": "Ternary operator",
+				"taskDescription": "Use the ternary operator to set a message based on a condition.",
+				"html": "<p>Open console for examples.</p>",
+				"css": "",
+				"javascript": "const msg = (3>2) ? 'yes' : 'no'; console.log(msg);"
+			}
+		]
+	},
+	{
+		"course": "Javascript loops",
+		"description": "In these lessons you will learn all about conditional statement, such as if-else an switch.",
+		"lessons": [
+			{
+				"id": "loop-1",
+				"title": "For loop",
+				"taskDescription": "Use a for loop to compute the sum of numbers 1..10 and log it.",
+				"html": "<p>Open console for results.</p>",
+				"css": "",
+				"javascript": "let s=0; for(let i=1;i<=10;i++){s+=i;} console.log(s);"
+			},
+			{
+				"id": "loop-2",
+				"title": "While loop",
+				"taskDescription": "Use a while loop to count down from 5.",
+				"html": "<p>Open console for results.</p>",
+				"css": "",
+				"javascript": "let i=5; while(i>0){ console.log(i); i--; }"
+			},
+			{
+				"id": "loop-3",
+				"title": "Array iteration",
+				"taskDescription": "Iterate over an array with forEach and log each value.",
+				"html": "<p>Open console for results.</p>",
+				"css": "",
+				"javascript": "[1,2,3].forEach(x=>console.log(x))"
+			}
+		]
+	}
+]
