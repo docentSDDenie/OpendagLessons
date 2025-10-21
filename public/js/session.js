@@ -1,10 +1,12 @@
 // Create a new session in session storage if it doesn't exist
+SESSION_STORAGE_KEY = "ltc_editor_session";
+
 function createSessionStorage(courses=[]) {
-    if(!sessionStorage.getItem("ltc_editor_session")) {
+    if(!sessionStorage.getItem(SESSION_STORAGE_KEY)) {
 
         //Create a new session object with files, current file, settings, courses and current course
         const session = {
-            files: [],
+            images: {},
             currentFile: null,
             settings: { 
                 theme: "light",
@@ -12,16 +14,18 @@ function createSessionStorage(courses=[]) {
                 autoSave: false
             },
             courses: courses,
-            currentCourse: null
+            courseSlug: "basic/0"
         };
 
-        sessionStorage.setItem("ltc_editor_session", JSON.stringify());
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify());
     }
+
+    clearImagesFromSessionStorage();
 }
 
 // Fetch the current session from session storage
 function fetchSessionStorage() {
-    const sessionData = sessionStorage.getItem("ltc_editor_session");
+    const sessionData = sessionStorage.getItem(SESSION_STORAGE_KEY);
     return sessionData ? JSON.parse(sessionData) : null;
 }
 
@@ -29,55 +33,51 @@ function fetchSessionStorage() {
 function updateCurrentFileInSessionStorage(filePath) {
     const session = fetchSessionStorage() || {};
     session.currentFile = filePath;
-    sessionStorage.setItem("ltc_editor_session", JSON.stringify(session));
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 }
 
 // Update the current course in session storage
-function updateCurrentCourseInSessionStorage(courseId) {
+function updateCurrentCourseInSessionStorage(courseSlug) {
     const session = fetchSessionStorage() || {};
-    session.currentCourse = courseId;
-    sessionStorage.setItem("ltc_editor_session", JSON.stringify(session));
+    session.courseSlug = courseSlug;
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 }
 
 // Save settings to session storage
 function saveSettingsToSessionStorage(settings) {
     const session = fetchSessionStorage() || {};
     session.settings = { ...session.settings, ...settings };
-    sessionStorage.setItem("ltc_editor_session", JSON.stringify(session));
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 }
 
-// Save a file to session storage, ensuring no duplicates and maintaining order
-function saveFileToSessionStorage(filePath, fileName) 
-{
+function addImageToSessionStorage(fileName, dataUrl) {
     const session = fetchSessionStorage() || {};
+    let images = session.images || {};
+    imgObj = {};
+    images[fileName] = dataUrl;
 
-    let files = session.files || [];
-    
-    if (!Array.isArray(files)) {
-        files = [];
-    }
-    
-    const existingIndex = files.findIndex(file => file.path === filePath);
-    
-    if (existingIndex !== -1) {
-        files.splice(existingIndex, 1);
-    }
-    
-    files.unshift({ path: filePath, name: fileName, contents: ed_html.getValue() });
-
-    session.files = files;
-    sessionStorage.setItem("ltc_editor_session", JSON.stringify(session));
+    session.images = images;
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 }
 
-// Delete a file from session storage
-function deleteFileFromSessionStorage(filePath) {
+function fetchImagesFromSessionStorage(fileName) {
     const session = fetchSessionStorage() || {};
-
-    let files = session.files || [];
-    files = files.filter(file => file.path !== filePath);
-
-    session.files = files;
-    sessionStorage.setItem("ltc_editor_session", JSON.stringify(session));
+    let images = session.images || {};
+   
+    return images[fileName] || null;
 }
 
+function removeImageFromSessionStorage(fileName) {
+    const session = fetchSessionStorage() || {};
+    let images = session.images || {};
+    delete images[fileName];
+   
+    session.images = images;
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+}
 
+function clearImagesFromSessionStorage() {
+    const session = fetchSessionStorage() || {};
+    session.images = {};
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+}
